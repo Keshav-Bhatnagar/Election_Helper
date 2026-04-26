@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ElectionEdu - The Democratic Process Explained</title>
+    <title>ElectionEdu - The Democratic Process</title>
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --primary-color: #3b82f6;
-            --primary-hover: #2563eb;
-            --accent-color: #f59e0b;
+            --bg-deep: #05050a;
+            --glass-bg: rgba(20, 20, 35, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border-color: #334155;
-            --danger-color: #ef4444;
-            --success-color: #10b981;
-            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-            --border-radius: 12px;
-            --transition: all 0.3s ease;
+            --primary-glow: #3b82f6;
+            --secondary-glow: #8b5cf6;
+            --accent-glow: #10b981;
+            --danger-glow: #ef4444;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
@@ -28,36 +33,81 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-deep);
             color: var(--text-main);
-            font-family: var(--font-main);
+            font-family: var(--font-body);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Orbs */
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            background: radial-gradient(circle at top left, rgba(5,5,10,1) 0%, rgba(10,10,20,1) 100%);
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .orb-1 { width: 400px; height: 400px; background: var(--primary-glow); top: -10%; left: -10%; animation-delay: 0s; }
+        .orb-2 { width: 500px; height: 500px; background: var(--secondary-glow); bottom: -20%; right: -10%; animation-delay: -5s; }
+        .orb-3 { width: 300px; height: 300px; background: rgba(16, 185, 129, 0.3); top: 40%; left: 50%; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 40px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
         }
 
         /* Typography */
-        h1, h2, h3 { font-weight: 700; line-height: 1.2; }
-        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-        h2 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary-color); }
-        h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
-        p { margin-bottom: 1rem; color: var(--text-muted); }
-        a { color: var(--primary-color); text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
+        .gradient-text-primary {
+            background: linear-gradient(135deg, var(--primary-glow) 0%, var(--secondary-glow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 { font-size: 3.5rem; margin-bottom: 1rem; }
+        h2 { font-size: 2rem; margin-bottom: 1rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--text-muted); font-size: 1.05rem; }
+        
         /* Layout */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
             width: 100%;
         }
 
         header {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
+            background: rgba(5, 5, 10, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -67,62 +117,132 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
-            max-width: 1200px;
+            padding: 1.2rem 2rem;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-family: var(--font-display);
+            font-size: 1.75rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            color: var(--text-main);
+            gap: 0.75rem;
+            letter-spacing: -0.03em;
         }
 
-        .logo-icon { color: var(--primary-color); }
+        .logo-icon { 
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
+        /* Buttons & Inputs */
         .btn {
-            background-color: var(--surface-color);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 999px;
             cursor: pointer;
-            font-family: inherit;
-            font-size: 0.9rem;
+            font-family: var(--font-body);
             font-weight: 600;
+            font-size: 1rem;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            backdrop-filter: blur(10px);
         }
 
         .btn:hover {
-            background-color: var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
+            background: linear-gradient(135deg, var(--primary-glow) 0%, var(--secondary-glow) 100%);
+            border: none;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
         }
         
         .btn-primary:hover {
-            background-color: var(--primary-hover);
-            border-color: var(--primary-hover);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
         }
+
+        input[type="text"] {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 1rem 1.5rem;
+            border-radius: 999px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        input[type="text"]::placeholder { color: rgba(255,255,255,0.3); }
+
+        /* Glass Cards */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            opacity: 0; /* For scroll animation */
+            transform: translateY(30px);
+        }
+        
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero p { max-width: 600px; margin: 0 auto; font-size: 1.2rem; }
 
         main {
-            flex: 1;
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
+            gap: 2.5rem;
+            margin-top: 1rem;
+            padding-bottom: 4rem;
         }
 
-        @media (min-width: 992px) {
+        @media (min-width: 1024px) {
             main {
                 grid-template-columns: 1fr 1fr;
                 grid-template-rows: auto auto;
@@ -132,310 +252,332 @@
             }
         }
 
-        .card {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        /* Timeline Styles */
+        /* Timeline UI Overhaul */
         .timeline-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .timeline-nav {
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-            scrollbar-width: thin;
-        }
-
-        .timeline-nav::-webkit-scrollbar { height: 6px; }
-        .timeline-nav::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
-
-        .timeline-step-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 0.5rem 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
+            margin-top: 3rem;
             position: relative;
-            transition: var(--transition);
         }
 
-        .timeline-step-btn::after {
+        .timeline-track {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .timeline-track::before {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+            top: 50%; left: 0; right: 0;
             height: 2px;
-            background: transparent;
+            background: rgba(255,255,255,0.1);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .timeline-progress {
+            position: absolute;
+            top: 50%; left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .timeline-node {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--bg-deep);
+            border: 2px solid rgba(255,255,255,0.2);
+            z-index: 3;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        .timeline-node.active {
+            border-color: var(--primary-glow);
+            background: var(--primary-glow);
+            color: white;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            transform: scale(1.15);
+        }
+
+        .timeline-node:hover:not(.active) {
+            border-color: rgba(255,255,255,0.5);
+            transform: scale(1.1);
+        }
+
+        .timeline-node-label {
+            position: absolute;
+            top: 50px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            color: var(--text-muted);
+            font-weight: 500;
             transition: var(--transition);
         }
+        
+        @media (max-width: 768px) {
+            .timeline-node-label { display: none; }
+        }
 
-        .timeline-step-btn:hover { color: var(--text-main); }
+        .timeline-node.active .timeline-node-label {
+            color: var(--text-main);
+        }
 
-        .timeline-step-btn.active { color: var(--primary-color); }
-        .timeline-step-btn.active::after { background: var(--primary-color); }
+        .timeline-display {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
 
         .timeline-content {
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            border: 1px solid var(--border-color);
-            min-height: 200px;
-            animation: fadeIn 0.3s ease;
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .timeline-content.switching {
+            opacity: 0;
+            transform: scale(0.98) translateY(10px);
         }
 
-        /* Chat Interface */
+        .step-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+        }
+
+        /* AI Chat UI */
         .chat-container {
             display: flex;
             flex-direction: column;
             height: 500px;
+            margin-top: 1.5rem;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 1rem;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-            margin-bottom: 1rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.03);
+            margin-bottom: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.25rem;
+            scrollbar-width: thin;
         }
+
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 
         .message {
             max-width: 85%;
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
-            line-height: 1.4;
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
+            line-height: 1.5;
+            animation: messageSlideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            font-size: 0.95rem;
+        }
+
+        @keyframes messageSlideIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .message.bot {
-            background: var(--surface-color);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             color: var(--text-main);
             align-self: flex-start;
-            border-bottom-left-radius: 0.25rem;
-            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .message.user {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
             color: white;
             align-self: flex-end;
-            border-bottom-right-radius: 0.25rem;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
         }
 
         .chat-input-area {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            position: relative;
         }
 
-        input[type="text"], input[type="password"] {
-            flex: 1;
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 0.75rem 1rem;
-            border-radius: var(--border-radius);
-            font-family: inherit;
-            transition: var(--transition);
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            width: fit-content;
         }
 
-        input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        .typing-indicator.active { display: flex; }
+
+        .dot {
+            width: 6px; height: 6px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out both;
+        }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
         }
 
         /* Civic Lookup Form */
         .lookup-form {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.25rem;
+            margin-top: 1.5rem;
         }
 
         .lookup-results {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
+            margin-top: 2rem;
             display: none;
         }
 
-        .lookup-results.active { display: block; animation: fadeIn 0.3s ease; }
+        .lookup-results.active { display: block; animation: fadeUp 0.4s ease; }
 
-        .result-item {
+        .result-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
             margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
         }
-        .result-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .result-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow));
+        }
         
         .badge {
             display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
             font-size: 0.75rem;
-            font-weight: 600;
-            background: rgba(59, 130, 246, 0.2);
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-content {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 500px;
-            padding: 2rem;
-            transform: translateY(20px);
-            transition: var(--transition);
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .close-btn:hover { color: var(--text-main); }
-
-        .form-group {
+            font-weight: 700;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
             margin-bottom: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-main);
-            font-size: 0.9rem;
-        }
-
-        .form-group input { width: 100%; }
-        
         .api-note {
-            font-size: 0.8rem;
-            color: var(--accent-color);
-            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            color: #fbbf24;
             background: rgba(245, 158, 11, 0.1);
-            padding: 0.5rem;
-            border-radius: 4px;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            display: flex; align-items: center; gap: 0.5rem;
         }
+        .api-note::before { content: '⚠️'; }
 
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
             color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid var(--glass-border);
             margin-top: auto;
             font-size: 0.9rem;
+            background: rgba(5,5,10,0.8);
         }
         
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            border: 2px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
+    <!-- Animated Ambient Background -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
     <header>
         <div class="header-content">
             <div class="logo">
-                <span class="logo-icon">🗳️</span> ElectionEdu
+                <span class="logo-icon">🗳️</span> 
+                <span class="gradient-text">ElectionEdu</span>
             </div>
-            <!-- Settings button removed -->
         </div>
     </header>
+
+    <div class="hero">
+        <h1 class="gradient-text">Empowering Voters with <br>Knowledge.</h1>
+        <p>Explore the interactive timeline, find your local polling information, or ask our AI assistant any questions you have about the democratic process.</p>
+    </div>
 
     <main class="container">
         <!-- 7-Step Timeline Section -->
         <section class="card timeline-section" aria-labelledby="timeline-heading">
-            <h2 id="timeline-heading">The Electoral Process Timeline</h2>
+            <h2 id="timeline-heading" class="gradient-text-primary">The Electoral Journey</h2>
             <p>Understand the 7 critical steps of a secure, transparent election process.</p>
             
             <div class="timeline-container">
-                <div class="timeline-nav" id="timelineNav" role="tablist">
-                    <!-- Nav buttons injected by JS -->
+                <div class="timeline-track" id="timelineTrack" role="tablist">
+                    <div class="timeline-progress" id="timelineProgress"></div>
+                    <!-- Nodes injected by JS -->
                 </div>
-                <div class="timeline-content" id="timelineContent" role="tabpanel" aria-live="polite">
-                    <!-- Content injected by JS -->
+                <div class="timeline-display">
+                    <div class="timeline-content" id="timelineContent" role="tabpanel" aria-live="polite">
+                        <!-- Content injected by JS -->
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Voter Data Lookup -->
         <section class="card" aria-labelledby="lookup-heading">
-            <h2 id="lookup-heading">Voter Information Lookup</h2>
+            <h2 id="lookup-heading">Voter Information</h2>
             <p>Find your polling place and elected representatives based on your address.</p>
             
             <form class="lookup-form" id="lookupForm">
                 <input type="text" id="addressInput" placeholder="Enter full address (e.g., 1263 Pacific Ave, KS)" required aria-label="Residential Address">
-                <button type="submit" class="btn btn-primary" id="lookupSubmitBtn">
-                    🔍 Search Address
+                <button type="submit" class="btn btn-primary" id="lookupSubmitBtn" style="justify-content: center;">
+                    <span style="font-size: 1.2rem;">🔍</span> Search Data
                 </button>
             </form>
 
@@ -446,19 +588,22 @@
 
         <!-- AI Q&A Chat -->
         <section class="card" aria-labelledby="chat-heading">
-            <h2 id="chat-heading">Election Assistant (AI)</h2>
-            <p>Ask questions about voting rights, registration deadlines, or election security.</p>
+            <h2 id="chat-heading">Election AI Assistant</h2>
+            <p>Ask questions about voting rights, deadlines, or election security.</p>
             
             <div class="chat-container">
                 <div class="chat-messages" id="chatMessages" role="log" aria-live="polite">
                     <div class="message bot">
-                        Hello! I'm an AI assistant trained to provide nonpartisan information about the U.g. electoral process. How can I help you today?
+                        Hello! I'm an AI assistant trained to provide nonpartisan information about the electoral process. How can I help you today?
+                    </div>
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
                     </div>
                 </div>
                 <form class="chat-input-area" id="chatForm">
                     <input type="text" id="chatInput" placeholder="Ask a question..." required aria-label="Chat Input">
-                    <button type="submit" class="btn btn-primary" id="chatSubmitBtn" aria-label="Send Message">
-                        ➤
+                    <button type="submit" class="btn btn-primary" id="chatSubmitBtn" aria-label="Send Message" style="border-radius: 50%; width: 50px; height: 50px; padding: 0; justify-content: center;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                     </button>
                 </form>
             </div>
@@ -469,88 +614,81 @@
         <p>Created for nonpartisan election education. Accessible & WCAG 2.1 AA Compliant.</p>
     </footer>
 
-    <!-- Settings Modal Removed for Backend Integration -->
-
     <script>
-        // --- 1. State Management ---
-        // API configurations are now handled securely by the backend
+        // --- 1. Intersection Observer for Scroll Animations ---
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => observer.observe(card));
 
         // --- 2. Interactive 7-Step Timeline ---
         const timelineSteps = [
-            {
-                title: "1. Voter Registration",
-                description: "Citizens must register to vote before participating in elections. Qualifications include being a U.S. citizen, meeting state residency requirements, and being at least 18 years old on or before Election Day. Many states offer online, mail-in, and in-person registration.",
-                icon: "📝"
-            },
-            {
-                title: "2. Voter Education",
-                description: "Voters research candidates, ballot measures, and polling locations. Election officials distribute official voter guides and sample ballots. It's crucial to rely on verified, authoritative sources like state election websites.",
-                icon: "📚"
-            },
-            {
-                title: "3. Early & Mail Voting",
-                description: "Many jurisdictions allow voting prior to Election Day via in-person early voting or mail-in (absentee) ballots. This increases accessibility and reduces wait times. Mail ballots are tracked securely using unique barcodes.",
-                icon: "✉️"
-            },
-            {
-                title: "4. Election Day",
-                description: "The traditional day for casting ballots in person. Poll workers verify voter identities against registration rolls. Voting equipment is tested beforehand, and most jurisdictions use paper ballots or machines that generate voter-verifiable paper trails.",
-                icon: "🗳️"
-            },
-            {
-                title: "5. Processing & Counting",
-                description: "Polls close and counting begins. Bipartisan teams of election officials process ballots. Mail-in ballots require signature verification. Preliminary, unofficial results are reported to the public and media.",
-                icon: "📊"
-            },
-            {
-                title: "6. Canvassing & Auditing",
-                description: "The post-election period where officials ensure every valid vote is counted exactly once. This involves resolving provisional ballots, checking math, and conducting risk-limiting audits (manual hand counts of a statistical sample) to verify machine accuracy.",
-                icon: "🔍"
-            },
-            {
-                title: "7. Certification",
-                description: "The final, official step where local and state election boards certify the results as accurate and final. Once certified, the election is concluded and winners are officially recognized.",
-                icon: "✅"
-            }
+            { title: "Registration", fullTitle: "1. Voter Registration", desc: "Citizens must register to vote before participating in elections. Qualifications include being a U.S. citizen, meeting state residency requirements, and being at least 18 years old on or before Election Day.", icon: "📝" },
+            { title: "Education", fullTitle: "2. Voter Education", desc: "Voters research candidates, ballot measures, and polling locations. Election officials distribute official voter guides and sample ballots. It's crucial to rely on verified sources.", icon: "📚" },
+            { title: "Early Voting", fullTitle: "3. Early & Mail Voting", desc: "Many jurisdictions allow voting prior to Election Day via in-person early voting or mail-in ballots. This increases accessibility. Mail ballots are tracked securely.", icon: "✉️" },
+            { title: "Election Day", fullTitle: "4. Election Day", desc: "The traditional day for casting ballots in person. Poll workers verify voter identities against registration rolls. Most jurisdictions use paper ballots or verifiable machines.", icon: "🗳️" },
+            { title: "Processing", fullTitle: "5. Processing & Counting", desc: "Polls close and counting begins. Bipartisan teams process ballots. Mail-in ballots require signature verification. Preliminary results are reported.", icon: "📊" },
+            { title: "Auditing", fullTitle: "6. Canvassing & Auditing", desc: "Officials ensure every valid vote is counted exactly once. This involves resolving provisional ballots and conducting risk-limiting manual audits to verify machine accuracy.", icon: "🔍" },
+            { title: "Certification", fullTitle: "7. Certification", desc: "The final step where local and state election boards certify the results as accurate. Once certified, the election is concluded and winners are recognized.", icon: "✅" }
         ];
 
-        const timelineNav = document.getElementById('timelineNav');
+        const timelineTrack = document.getElementById('timelineTrack');
+        const timelineProgress = document.getElementById('timelineProgress');
         const timelineContent = document.getElementById('timelineContent');
 
         function renderTimeline() {
             timelineSteps.forEach((step, index) => {
-                const btn = document.createElement('button');
-                btn.className = `timeline-step-btn ${index === 0 ? 'active' : ''}`;
-                btn.setAttribute('role', 'tab');
-                btn.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
-                btn.setAttribute('aria-controls', 'timelineContent');
-                btn.innerText = step.title;
-                btn.onclick = () => selectTimelineStep(index);
-                timelineNav.appendChild(btn);
+                const node = document.createElement('div');
+                node.className = `timeline-node ${index === 0 ? 'active' : ''}`;
+                node.setAttribute('role', 'tab');
+                node.innerText = index + 1;
+                
+                const label = document.createElement('div');
+                label.className = 'timeline-node-label';
+                label.innerText = step.title;
+                node.appendChild(label);
+
+                node.onclick = () => selectTimelineStep(index);
+                timelineTrack.appendChild(node);
             });
             updateTimelineContent(0);
         }
 
         function selectTimelineStep(index) {
-            document.querySelectorAll('.timeline-step-btn').forEach((btn, i) => {
-                btn.classList.toggle('active', i === index);
-                btn.setAttribute('aria-selected', i === index ? 'true' : 'false');
-            });
-            updateTimelineContent(index);
+            const nodes = document.querySelectorAll('.timeline-node');
+            nodes.forEach((node, i) => node.classList.toggle('active', i === index));
+            
+            // Update Progress Bar
+            const percentage = (index / (timelineSteps.length - 1)) * 100;
+            timelineProgress.style.width = `${percentage}%`;
+
+            // Animate Content Switch
+            timelineContent.classList.add('switching');
+            setTimeout(() => {
+                updateTimelineContent(index);
+                timelineContent.classList.remove('switching');
+            }, 300);
         }
 
         function updateTimelineContent(index) {
             const step = timelineSteps[index];
             timelineContent.innerHTML = `
-                <div style="font-size: 3rem; margin-bottom: 1rem;">${step.icon}</div>
-                <h3>${step.title}</h3>
-                <p style="color: var(--text-main); font-size: 1.1rem; line-height: 1.8;">${step.description}</p>
+                <div class="step-icon">${step.icon}</div>
+                <h3 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 1rem; color: #fff;">${step.fullTitle}</h3>
+                <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">${step.desc}</p>
             `;
         }
 
         renderTimeline();
 
-        // --- 3. Voter Data Lookup (Google Civic API) ---
+        // --- 3. Voter Data Lookup ---
         const lookupForm = document.getElementById('lookupForm');
         const lookupResults = document.getElementById('lookupResults');
         const lookupSubmitBtn = document.getElementById('lookupSubmitBtn');
@@ -560,7 +698,7 @@
             const address = document.getElementById('addressInput').value.trim();
             if (!address) return;
 
-            lookupSubmitBtn.innerHTML = '<span class="loading"></span> Searching...';
+            lookupSubmitBtn.innerHTML = '<span class="loading"></span>';
             lookupSubmitBtn.disabled = true;
             lookupResults.classList.remove('active');
 
@@ -568,36 +706,36 @@
                 const response = await fetch(`/api/civic?address=${encodeURIComponent(address)}`);
                 const data = await response.json();
                 
-                if (data.error) throw new Error(data.error || 'Failed to fetch data');
+                if (data.error && data.mock !== true) throw new Error(data.error || 'Failed to fetch data');
                 showLookupResults(data, data.mock);
             } catch (error) {
-                lookupResults.innerHTML = `<p style="color: var(--danger-color)">Error: ${error.message}</p>`;
+                lookupResults.innerHTML = `<div class="api-note" style="color: var(--danger-glow); border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1);">${error.message}</div>`;
                 lookupResults.classList.add('active');
             } finally {
-                lookupSubmitBtn.innerHTML = '🔍 Search Address';
+                lookupSubmitBtn.innerHTML = '<span style="font-size: 1.2rem;">🔍</span> Search Data';
                 lookupSubmitBtn.disabled = false;
             }
         });
 
         function showLookupResults(data, isMock) {
-            let html = isMock ? `<div class="api-note" style="margin-bottom:1rem">${data.message || 'Showing mock data.'}</div>` : '';
+            let html = isMock ? `<div class="api-note" style="margin-bottom:1.5rem">${data.message || 'Showing mock data.'}</div>` : '';
             
             if (data.pollingLocations && data.pollingLocations.length > 0) {
                 const poll = data.pollingLocations[0];
                 html += `
-                    <div class="result-item">
+                    <div class="result-card">
                         <span class="badge">Polling Location</span>
-                        <h3>${poll.address.locationName || 'Designated Polling Place'}</h3>
-                        <p>${poll.address.line1}, ${poll.address.city}, ${poll.address.state} ${poll.address.zip}</p>
-                        ${poll.pollingHours ? `<p><strong>Hours:</strong> ${poll.pollingHours}</p>` : ''}
+                        <h3 style="color: white; margin-bottom: 0.5rem;">${poll.address.locationName || 'Designated Polling Place'}</h3>
+                        <p style="margin-bottom: 0;">${poll.address.line1}, ${poll.address.city}, ${poll.address.state} ${poll.address.zip}</p>
+                        ${poll.pollingHours ? `<p style="margin-top: 0.5rem; color: var(--primary-glow);"><strong>🕒 ${poll.pollingHours}</strong></p>` : ''}
                     </div>
                 `;
             } else {
-                html += `<div class="result-item"><p>No polling locations found for this address at this time.</p></div>`;
+                html += `<div class="result-card"><p>No polling locations found for this address at this time.</p></div>`;
             }
 
             if (data.contests && data.contests.length > 0) {
-                html += `<div class="result-item"><span class="badge">On The Ballot</span><ul style="margin-left: 1.5rem; color: var(--text-main);">`;
+                html += `<div class="result-card"><span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.3);">On The Ballot</span><ul style="margin-left: 1.5rem; color: white; line-height: 2;">`;
                 data.contests.slice(0,3).forEach(c => {
                     html += `<li><strong>${c.office || c.type}</strong></li>`;
                 });
@@ -608,21 +746,22 @@
             lookupResults.classList.add('active');
         }
 
-        // --- 4. AI Chat Interface (Anthropic API) ---
+        // --- 4. AI Chat Interface ---
         const chatForm = document.getElementById('chatForm');
         const chatInput = document.getElementById('chatInput');
         const chatMessages = document.getElementById('chatMessages');
         const chatSubmitBtn = document.getElementById('chatSubmitBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
 
         let messageHistory = [
-            { role: "system", content: "You are a nonpartisan election education assistant. Answer questions about the US voting process, registration, and election security objectively. Keep answers under 100 words." }
+            { role: "system", content: "You are a nonpartisan election education assistant. Answer questions about the US voting process objectively. Keep answers under 100 words." }
         ];
 
         function addChatMessage(role, text) {
             const div = document.createElement('div');
             div.className = `message ${role}`;
             div.textContent = text;
-            chatMessages.appendChild(div);
+            chatMessages.insertBefore(div, typingIndicator);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
@@ -636,6 +775,9 @@
             chatInput.disabled = true;
             chatSubmitBtn.innerHTML = '<span class="loading"></span>';
             chatSubmitBtn.disabled = true;
+            
+            typingIndicator.classList.add('active');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
 
             messageHistory.push({ role: "user", content: text });
 
@@ -654,14 +796,16 @@
                 const data = await response.json();
                 const reply = data.reply;
                 messageHistory.push({ role: "assistant", content: reply });
+                
+                typingIndicator.classList.remove('active');
                 addChatMessage('bot', reply);
             } catch (error) {
+                typingIndicator.classList.remove('active');
                 addChatMessage('bot', `Error: ${error.message}`);
-                // Remove the user message from history so they can try again
                 messageHistory.pop();
             } finally {
                 chatInput.disabled = false;
-                chatSubmitBtn.innerHTML = '➤';
+                chatSubmitBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
                 chatSubmitBtn.disabled = false;
                 chatInput.focus();
             }
