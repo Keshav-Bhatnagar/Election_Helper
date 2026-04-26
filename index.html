@@ -569,7 +569,7 @@
                 const data = await response.json();
                 
                 if (data.error) throw new Error(data.error || 'Failed to fetch data');
-                showLookupResults(data, false);
+                showLookupResults(data, data.mock);
             } catch (error) {
                 lookupResults.innerHTML = `<p style="color: var(--danger-color)">Error: ${error.message}</p>`;
                 lookupResults.classList.add('active');
@@ -580,7 +580,7 @@
         });
 
         function showLookupResults(data, isMock) {
-            let html = isMock ? '<div class="api-note" style="margin-bottom:1rem">Showing mock data. Configure API keys on the backend for real data.</div>' : '';
+            let html = isMock ? `<div class="api-note" style="margin-bottom:1rem">${data.message || 'Showing mock data.'}</div>` : '';
             
             if (data.pollingLocations && data.pollingLocations.length > 0) {
                 const poll = data.pollingLocations[0];

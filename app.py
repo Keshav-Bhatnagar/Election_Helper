@@ -22,20 +22,27 @@ def civic_lookup():
         return jsonify({"error": "Address is required"}), 400
 
     if not GOOGLE_CIVIC_API_KEY or GOOGLE_CIVIC_API_KEY == 'your_google_civic_api_key_here':
-        # Return mock data if no key is configured
+        # Return mock data if no key is configured, but adapt slightly if it seems like an Indian address
+        is_india = 'india' in address.lower()
+        mock_address = { "locationName": "Delhi Public School (Mock)", "line1": "Mathura Road", "city": "New Delhi", "state": "DL", "zip": "110003" } if is_india else { "locationName": "Community Center (Mock)", "line1": "123 Main St", "city": "Anytown", "state": "ST", "zip": "12345" }
+        
         return jsonify({
+            "mock": True, 
+            "message": "Google Civic API key is missing. Showing mock data. Note: The real Google Civic API only supports U.S. elections.",
             "pollingLocations": [{
-                "address": { "locationName": "Community Center", "line1": "123 Main St", "city": "Anytown", "state": "ST", "zip": "12345" },
-                "pollingHours": "7:00 AM - 8:00 PM"
+                "address": mock_address,
+                "pollingHours": "7:00 AM - 6:00 PM"
             }],
-            "contests": [{ "type": "General", "office": "Governor", "candidates": [{"name": "Jane Doe"}, {"name": "John Smith"}] }]
+            "contests": [{ "type": "General", "office": "Prime Minister (Mock)" if is_india else "Governor (Mock)", "candidates": [{"name": "Candidate A"}, {"name": "Candidate B"}] }]
         })
 
     url = f"https://www.googleapis.com/civicinfo/v2/voterinfo?address={address}&key={GOOGLE_CIVIC_API_KEY}"
     response = requests.get(url)
     
     if response.status_code != 200:
-        return jsonify({"error": "Failed to fetch civic data", "details": response.json()}), response.status_code
+        error_details = response.json()
+        hint = " Note: Google Civic API only supports U.S. addresses." if response.status_code == 400 else ""
+        return jsonify({"error": f"Failed to fetch civic data.{hint}", "details": error_details}), response.status_code
 
     return jsonify(response.json())
 
