@@ -22,29 +22,52 @@ def civic_lookup():
         return jsonify({"error": "Address is required"}), 400
 
     if not GOOGLE_CIVIC_API_KEY or GOOGLE_CIVIC_API_KEY == 'your_google_civic_api_key_here':
-        # Return mock data if no key is configured, but adapt slightly if it seems like an Indian address
+        # Return mock data if no key is configured
         is_india = 'india' in address.lower()
         mock_address = { "locationName": "Delhi Public School (Mock)", "line1": "Mathura Road", "city": "New Delhi", "state": "DL", "zip": "110003" } if is_india else { "locationName": "Community Center (Mock)", "line1": "123 Main St", "city": "Anytown", "state": "ST", "zip": "12345" }
         
         return jsonify({
             "mock": True, 
             "message": "Google Civic API key is missing. Showing mock data. Note: The real Google Civic API only supports U.S. elections.",
+            "election": { "name": "General Election (Mock)", "electionDay": "2026-11-03" },
             "pollingLocations": [{
                 "address": mock_address,
                 "pollingHours": "7:00 AM - 6:00 PM"
             }],
-            "contests": [{ "type": "General", "office": "Prime Minister (Mock)" if is_india else "Governor (Mock)", "candidates": [{"name": "Candidate A"}, {"name": "Candidate B"}] }]
+            "representatives": [
+                {"office": "President (Mock)" if is_india else "Governor (Mock)", "official": "Jane Doe"}
+            ]
         })
 
-    url = f"https://www.googleapis.com/civicinfo/v2/voterinfo?address={address}&key={GOOGLE_CIVIC_API_KEY}"
-    response = requests.get(url)
+    # Fetch voter info (Polling locations, upcoming elections, contests)
+    voter_url = f"https://www.googleapis.com/civicinfo/v2/voterinfo?address={address}&key={GOOGLE_CIVIC_API_KEY}"
+    voter_response = requests.get(voter_url)
     
-    if response.status_code != 200:
-        error_details = response.json()
-        hint = " Note: Google Civic API only supports U.S. addresses." if response.status_code == 400 else ""
-        return jsonify({"error": f"Failed to fetch civic data.{hint}", "details": error_details}), response.status_code
+    # Fetch representatives
+    rep_url = f"https://www.googleapis.com/civicinfo/v2/representatives?address={address}&key={GOOGLE_CIVIC_API_KEY}"
+    rep_response = requests.get(rep_url)
+    
+    if voter_response.status_code != 200 and rep_response.status_code != 200:
+        error_details = voter_response.json() if voter_response.status_code != 200 else rep_response.json()
+        hint = " Note: Google Civic API only supports U.S. addresses." if voter_response.status_code == 400 else ""
+        return jsonify({"error": f"Failed to fetch civic data.{hint}", "details": error_details}), 400
 
-    return jsonify(response.json())
+    voter_data = voter_response.json() if voter_response.status_code == 200 else {}
+    rep_data = rep_response.json() if rep_response.status_code == 200 else {}
+
+    # Extract representatives
+    reps = []
+    if 'offices' in rep_data and 'officials' in rep_data:
+        for office in rep_data['offices']:
+            for official_idx in office.get('officialIndices', []):
+                official = rep_data['officials'][official_idx]
+                reps.append({"office": office['name'], "official": official['name']})
+
+    return jsonify({
+        "election": voter_data.get('election', {}),
+        "pollingLocations": voter_data.get('pollingLocations', []),
+        "representatives": reps
+    })
 
 @app.route('/api/chat', methods=['POST'])
 def chat():

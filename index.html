@@ -720,6 +720,16 @@
         function showLookupResults(data, isMock) {
             let html = isMock ? `<div class="api-note" style="margin-bottom:1.5rem">${data.message || 'Showing mock data.'}</div>` : '';
             
+            if (data.election && data.election.name) {
+                html += `
+                    <div class="result-card" style="border-color: rgba(16, 185, 129, 0.3);">
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">Upcoming Election</span>
+                        <h3 style="color: white; margin-bottom: 0.5rem;">${data.election.name}</h3>
+                        <p style="margin-bottom: 0; color: var(--primary-glow);"><strong>📅 ${data.election.electionDay}</strong></p>
+                    </div>
+                `;
+            }
+
             if (data.pollingLocations && data.pollingLocations.length > 0) {
                 const poll = data.pollingLocations[0];
                 html += `
@@ -734,10 +744,10 @@
                 html += `<div class="result-card"><p>No polling locations found for this address at this time.</p></div>`;
             }
 
-            if (data.contests && data.contests.length > 0) {
-                html += `<div class="result-card"><span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.3);">On The Ballot</span><ul style="margin-left: 1.5rem; color: white; line-height: 2;">`;
-                data.contests.slice(0,3).forEach(c => {
-                    html += `<li><strong>${c.office || c.type}</strong></li>`;
+            if (data.representatives && data.representatives.length > 0) {
+                html += `<div class="result-card"><span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.3);">Elected Representatives</span><ul style="margin-left: 1.5rem; color: white; line-height: 2;">`;
+                data.representatives.slice(0,5).forEach(rep => {
+                    html += `<li><strong>${rep.office}:</strong> <span style="color: var(--text-muted);">${rep.official}</span></li>`;
                 });
                 html += `</ul></div>`;
             }
